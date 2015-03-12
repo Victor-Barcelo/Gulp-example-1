@@ -20,7 +20,9 @@ var browserify = require('browserify'),
     mocha = require('gulp-mocha'),
     log4js = require('log4js'),
     fs = require('fs'),
-    yargs = require('yargs');
+    yargs = require('yargs'),
+    browserSync = require('browser-sync');
+
 
 var config = require('./gulpUserConfig.json');
 var env = yargs.argv.env || 'dev';
@@ -89,7 +91,29 @@ gulp.task('default', ['build']);
 
 gulp.task('build', function () {
     runSequence('run tests', 'clean',
-        ['html', 'js', 'sass', 'images:optimize'],
-        'ftp'
+        ['html', 'js', 'sass', 'images:optimize']
+        //,'ftp'
     );
+});
+
+//----Watches & Browser-sync
+
+gulp.task('watch', function () {
+    gulp.watch('./src/js/**/*.js', ['js']);
+    gulp.watch('./src/scss/*.scss', ['sass']);
+    gulp.watch('./src/*.html', ['html']);
+});
+
+gulp.task('browser-sync', function () {
+    var files = [
+        './build/index.html',
+        './build/js/**/*.js',
+        './build/css/*.css'
+    ];
+
+    browserSync.init(files, {
+        server: {
+            baseDir: './build'
+        }
+    });
 });
