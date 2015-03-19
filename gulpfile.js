@@ -36,9 +36,9 @@ gulp.task('js', function () {
     });
     return gulp.src('./src/js/*.js')
         .pipe(browserified)
+        .pipe(uglify())
         .pipe(gulpif(env === 'dev', sourcemaps.init({loadMaps: true})))
         .pipe(gulpif(env === 'dev', sourcemaps.write('./')))
-        .pipe(gulpif(env === 'prod', uglify()))
         .pipe(gulp.dest('./build/js'));
 });
 
